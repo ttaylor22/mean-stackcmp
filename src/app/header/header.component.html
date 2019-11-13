@@ -1,1 +1,28 @@
-<mat-toolbar color="primary">My Messages</mat-toolbar>
+<mat-toolbar color="primary">
+  <span>
+    Messenger
+  </span>
+  <span class = "spacebar"></span>
+  <ul>
+    <li>
+        <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu">
+              <button mat-menu-item [routerLink]="['/messages']" routerLinkActive="active">
+                <mat-icon>message</mat-icon>
+                <span>Messages</span>
+              </button>
+              <button mat-menu-item [routerLink]="['/create']" routerLinkActive="active">
+                <mat-icon>create</mat-icon>
+                <span>Create a new message</span>
+              </button>
+
+            <button mat-menu-item disabled>
+              <mat-icon>notifications_off</mat-icon>
+              <span>Disable alerts</span>
+            </button>
+          </mat-menu>
+    </li>
+  </ul>
+</mat-toolbar>

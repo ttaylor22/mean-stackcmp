@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
+import { stringify } from 'querystring';
 
 @Injectable({providedIn: 'root'})
 export class PostsService {
@@ -44,17 +45,26 @@ export class PostsService {
     });
   }
 
-  editPost(updatedPost: Post) {
-    this.http.put('http://localhost:3000/api/posts/' + updatedPost.id, updatedPost.content)
-    .subscribe(() => {
-      const index = this.posts.findIndex(post => post.id === updatedPost.id);
-      if (index === -1) {
-        this.posts.push(updatedPost);
-      } else {
-        this.posts[index] = updatedPost;
-      }
-      this.postsUpdated.next([...this.posts]);
-    });
+  getPost(id: string) {
+    return this.http.get<{ _id: string; title: string; content: string }>(
+      'http://localhost:3000/api/posts/' + id
+    );
+  }
+
+  editPost(id: string, title: string, content: string) {
+    const post: Post = {id, title, content};
+    console.log(post);
+    this.http.put('http://localhost:3000/api/posts/' + id, post)
+    .subscribe(response => console.log(response));
+    // () => {
+    //   const index = this.posts.findIndex(post => post.id === updatedPost.id);
+    //   if (index === -1) {
+    //     this.posts.push(updatedPost);
+    //   } else {
+    //     this.posts[index] = updatedPost;
+    //   }
+    //   this.postsUpdated.next([...this.posts]);
+    // });
   }
 
   deletePost(postId: string) {
