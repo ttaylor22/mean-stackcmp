@@ -2,3 +2,25 @@ mat-form-field,
 textarea {
   width: 100%;
 }
+
+mat-spinner {
+  margin: auto;
+}
+
+input[type="file"] {
+  visibility: hidden;
+}
+
+.spacebar button {
+  margin-left: 20px;
+}
+
+.image-preview {
+  height: 5rem;
+  margin: 1rem 0;
+}
+
+.image-preview img{
+  height: 100%;
+  width: 100px;
+}
