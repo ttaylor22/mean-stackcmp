@@ -55,16 +55,15 @@ export class PostsService {
     const post: Post = {id, title, content};
     console.log(post);
     this.http.put('http://localhost:3000/api/posts/' + id, post)
-    .subscribe(response => console.log(response));
-    // () => {
-    //   const index = this.posts.findIndex(post => post.id === updatedPost.id);
-    //   if (index === -1) {
-    //     this.posts.push(updatedPost);
-    //   } else {
-    //     this.posts[index] = updatedPost;
-    //   }
-    //   this.postsUpdated.next([...this.posts]);
-    // });
+    .subscribe(() => {
+      const index = this.posts.findIndex(p => p.id === post.id);
+      if (index === -1) {
+        this.posts.push(post);
+      } else {
+        this.posts[index] = post;
+      }
+      this.postsUpdated.next([...this.posts]);
+    });
   }
 
   deletePost(postId: string) {
