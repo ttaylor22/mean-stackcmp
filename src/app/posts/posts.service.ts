@@ -20,7 +20,8 @@ export class PostsService {
         return {
           title: post.title,
           content: post.content,
-          id: post._id
+          id: post._id,
+          imagePath: post.imagePath
         };
       });
     }))
@@ -34,34 +35,63 @@ export class PostsService {
     return this.postsUpdated.asObservable();
   }
 
-  addPost(title: string, content: string) {
-    const post: Post = {id: null, title, content};
-    this.http.post<{message: string, postId: string}>('http://localhost:3000/api/posts', post)
+  addPost(title: string, content: string, image: File) {
+    const post = new FormData();
+    post.append('title', title);
+    post.append('content', content);
+    post.append('image', image, title);
+
+    this.http.post<{message: string, post: Post}>('http://localhost:3000/api/posts', post)
     .subscribe((responseData) => {
-      const id = responseData.postId;
-      post.id = id;
-      this.posts.push(post);
+      const savePost: Post = {
+        id: responseData.post.id,
+        title,
+        content,
+        imagePath: responseData.post.imagePath
+      };
+      this.posts.push(savePost);
       this.postsUpdated.next([...this.posts]);
       this.router.navigate(['/']);
     });
   }
 
   getPost(id: string) {
-    return this.http.get<{ _id: string; title: string; content: string }>(
+    return this.http.get<{ _id: string; title: string; content: string, imagePath: string }>(
       'http://localhost:3000/api/posts/' + id
     );
   }
 
-  editPost(id: string, title: string, content: string) {
-    const post: Post = {id, title, content};
+  editPost(id: string, title: string, content: string, image: File | string) {
+    let post: Post | FormData;
+    if (typeof(image) === 'object') {
+      post = new FormData();
+      post.append('id', id);
+      post.append('title', title);
+      post.append('content', content);
+      post.append('image', image, title);
+    } else {
+      post = {
+        id,
+        title,
+        content,
+        imagePath: image
+      };
+
+    }
     console.log(post);
     this.http.put('http://localhost:3000/api/posts/' + id, post)
-    .subscribe(() => {
-      const index = this.posts.findIndex(p => p.id === post.id);
+    .subscribe(response => {
+      const index = this.posts.findIndex(p => p.id === id);
+      const savePost: Post = {
+        id,
+        title,
+        content,
+        imagePath: image as string
+      };
       if (index === -1) {
-        this.posts.push(post);
+        this.posts.push(savePost);
       } else {
-        this.posts[index] = post;
+        this.posts[index] = savePost;
       }
       this.postsUpdated.next([...this.posts]);
       this.router.navigate(['/']);
