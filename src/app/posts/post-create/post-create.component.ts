@@ -75,6 +75,7 @@ export class PostCreateComponent implements OnInit {
     reader.readAsDataURL(file);
   }
 
+
   onSavePost() {
     if (this.form.invalid) {
       return;

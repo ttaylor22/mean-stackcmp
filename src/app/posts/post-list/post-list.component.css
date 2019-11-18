@@ -5,10 +5,16 @@
 
 .info-text{
   text-align: center;
+  color: grey;
+  font-size: small;
 }
 
 mat-spinner{
   margin: auto;
+}
+
+mat-paginator{
+  margin-top: 1rem;
 }
 
 
